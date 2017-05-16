@@ -1,1 +1,1 @@
-# postglacial
+# Post-glacial landscape evolution model
