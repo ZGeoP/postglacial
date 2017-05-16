@@ -5,7 +5,9 @@ from landlab import ModelParameterDictionary
 
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
+HOME = os.environ['HOME']
 
 def shiftColorMap(cmap, name, midpoint=0.9):
     import matplotlib
@@ -170,9 +172,9 @@ def save_result(t, result, filepath):
 
 def build_model_grid(path, dem_file_name):
 
-    input_file = path+'/coupled_params_sp.txt'
-    inputs = ModelParameterDictionary(input_file)
-    moraine_width = inputs.read_float('moraine_width')
+    #input_file = path+'/coupled_params_sp.txt'
+    #inputs = ModelParameterDictionary(input_file)
+    #moraine_width = inputs.read_float('moraine_width')
 
     (mg, z) = read_esri_ascii(path+dem_file_name, name = 'topographic__elevation')
     mg.set_closed_boundaries_at_grid_edges(True, True, False, True)
@@ -339,7 +341,9 @@ def analyze_drainage_percentage_elev_thr(path, plotting=True):
     runtime = inputs.read_float('total_time')
     dt = runtime/num_outs
 
-    initial_mg = build_model_grid(path, '/Topography_t=0.0.txt')
+    #initial_mg = build_model_grid(path, '/Topography_t=0.0.txt')
+    initial_mg = build_model_grid(HOME+'/postglacial/initial_topo/', 
+                                  'glacial_lake_plain.txt')
     min_elev = np.nanmin(initial_mg.at_node['topographic__elevation'][initial_mg.core_nodes])
 
     t = np.zeros(num_outs)
