@@ -183,12 +183,14 @@ def run_model(input_file=None, savepath=None, initial_topo_file=None, initial_se
     #perform the loops:
     for i in xrange(nt):
         #note the input arguments here are not totally standardized between modules
-        
+
+        ''' 
         # simulate changing climate
         if (((i+1)*dt // 5000.) % 2) == 0.:
             all_dry = False
         else:
             all_dry = True
+        '''
 
         #sp = FastscapeEroder(mg, input_file, threshold_sp = threshold_stream_power)
 
