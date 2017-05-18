@@ -7,7 +7,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-HOME = os.environ['HOME']
+try:
+    HOME = os.environ['HOME']
+except KeyError:
+    pass
 
 def shiftColorMap(cmap, name, midpoint=0.9):
     import matplotlib
