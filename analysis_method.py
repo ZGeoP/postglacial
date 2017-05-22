@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# Copyright (C) 2015 Jingtao Lai
+
 from landlab.io.esri_ascii import read_esri_ascii
 from landlab.io.esri_ascii import write_esri_ascii
 from landlab import RasterModelGrid
