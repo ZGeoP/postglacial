@@ -43,7 +43,7 @@ def shiftColorMap(cmap, name, midpoint=0.9):
 
     return newcmap
 
-
+'''
 def channel_profile():
 
     from landlab.plot import channel_profile as prf
@@ -79,6 +79,7 @@ def channel_profile():
     plt.savefig('channel_profile.jpg')
 
     plt.close('all')
+'''
 
 
 def plot_grid_3d(file_name, zticks=None):
@@ -261,52 +262,6 @@ def analyze_drainage_percentage(path, plotting=True):
     #print '\n'
     #return t, percentage
 
-'''
-def analyze_drainage_percentage_temp(path, plotting=True):
-    from landlab.components.stream_power.fastscape_stream_power_JL import FastscapeEroder
-    from landlab.components.flow_routing.route_flow_dn_JL import FlowRouter
-    from landlab.components.sink_fill.pit_fill_pf import PitFiller
-
-    print 'Analysing drainage percentage...'
-    print path
-
-    input_file = path+'/coupled_params_sp.txt'
-    inputs = ModelParameterDictionary(input_file)
-    num_outs = inputs.read_int('number_of_outputs')
-    runtime = inputs.read_float('total_time')
-    dt = runtime/num_outs
-
-    t = np.zeros(num_outs)
-    percentage = np.zeros(num_outs)
-    for i in range(num_outs):
-        t[i] = (i+1)*dt
-        mg = build_model_grid(path, '/Topography_t='+str(t[i])+'.txt')
-        sp = FastscapeEroder(mg, K_sp = 1e-04)
-        fr = FlowRouter(mg)
-        pf = PitFiller(mg)
-        mg = pf.pit_fill()
-        mg = fr.route_flow(routing_flat=True)
-        mg = sp.erode(mg, 100.)
-        mg.at_node['flow_to_boundary'] = identify_drained_area(mg)
-        flow_to_boundary = mg.at_node['flow_to_boundary']
-        count, = np.where(flow_to_boundary)
-        count = len(count)
-        count = float(count)
-        nrows, ncols = mg.shape
-        percentage[i] = count/(nrows*ncols)
-        print 'Finished loop', i+1
-
-    save_result(t, percentage, path+'/drainage_percentage.txt')
-
-    if plotting:
-        plt.figure(1)
-        plt.plot(t, percentage)
-        plt.ylim([0,1])
-        plt.xlabel('Time (years)')
-        plt.ylabel('Drainage Percentage')
-        plt.savefig(path+'/drainage_percentage.jpg', dpi=300)
-        plt.close('all')
-'''
 
 def identify_drained_area_elev_thr(grid, threshold_elevation):
 
@@ -383,53 +338,6 @@ def analyze_drainage_percentage_elev_thr(path, plotting=True):
         plt.ylabel('Drainage Percentage')
         plt.savefig(path+'/drainage_percentage.jpg', dpi=300)
         plt.close('all')
-
-
-def plot_result(file_name, mkr='v'):
-
-    inputfile = file(file_name, 'r')
-    n = int(inputfile.readline())
-    t = np.zeros(n, dtype=float)
-    result = np.zeros(n, dtype=float)
-    for i in range(n):
-        t[i] = float(inputfile.readline())
-    for i in range(n):
-        result[i] = float(inputfile.readline())
-    inputfile.close()
-    plt.plot(t, result, marker=mkr)
-
-
-def plot_result_legend(file_name, kwd, value, mkr='v'):
-
-    inputfile = file(file_name, 'r')
-    n = int(inputfile.readline())
-    t = np.zeros(n, dtype=float)
-    result = np.zeros(n, dtype=float)
-    for i in range(n):
-        t[i] = float(inputfile.readline())
-    for i in range(n):
-        result[i] = float(inputfile.readline())
-    inputfile.close()
-    if kwd=='initial_slope':
-        kwd = 'Initial slope'
-    if kwd=='k_sp':
-        kwd = 'K'
-    if kwd=='incision_rate':
-        kwd = 'Incision rate'
-    if kwd=='threshold_stream_power':
-        kwd = 'Threshold value'
-    plt.plot(t, result, marker=mkr, label=kwd+'='+str(value))
-
-
-def batch_analysis(kwd, value_list, input_file=None):
-
-    if input_file is None:
-        input_file = './coupled_params_sp.txt'
-
-    for value in value_list:
-        rewrite_params_file(input_file, kwd, value)
-        savepath = generate_savepath(input_file=input_file)
-        analyze_drainage_percentage(path=savepath)
 
 
 def analyze_mean_erosion(path, plotting=True):
@@ -916,7 +824,6 @@ def analyze_volume_over_area_of_sink(path, plotting=True):
         plt.ylabel('Mean Volume over Area of Sinks (m)')
         plt.savefig(path+'/mean_volume_over_area_of_sink.jpg', dpi=300)
         plt.close('all')
-
 
 
 def cross_section(path):
