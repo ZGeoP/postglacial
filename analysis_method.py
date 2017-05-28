@@ -1563,15 +1563,17 @@ def identify_channels(grid, base_nodes, elev_thr):
         channel_list.append(channel)
 
     channel_length = np.zeros(num_of_channels)
+    distance_upstream_list = []
     for i in range(num_of_channels):
-        distance_upstream = 0.
-        node = base_nodes[i]
-        for j in range(len(channel_list[i])-1):
-            donor = channel_list[i][j+1]
-            distance_upstream += np.sqrt((grid.node_x[node]-grid.node_x[donor])**2 \
-                                          +(grid.node_y[node]-grid.node_y[donor])**2)
-            node = donor
-        channel_length[i] = distance_upstream
+        distance_upstream = np.zeros(len(channel_list[i]))
+        for j in range(1, len(channel_list[i])):
+            t_node = channel_list[i][j-1]
+            f_node = channel_list[i][j]
+            distance_upstream[j] = distance_upstream[j-1] \
+                                     + np.sqrt((grid.node_x[t_node]-grid.node_x[f_node])**2 \
+                                     + (grid.node_y[t_node]-grid.node_y[f_node])**2)
+        channel_length[i] = distance_upstream[len(channel_list[i])-1]
+        distance_upstream_list.append(distance_upstream)
 
     channel_drainage = np.zeros(num_of_channels)
     for i in range(num_of_channels):
@@ -1581,4 +1583,4 @@ def identify_channels(grid, base_nodes, elev_thr):
     fr = 1
     pf = 1
 
-    return (channel_list, channel_length, channel_drainage)
+    return (channel_list, channel_length, channel_drainage, distance_upstream_list)
