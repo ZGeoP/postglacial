@@ -303,7 +303,7 @@ def analyze_drainage_percentage_elev_thr(path, plotting=True):
     dt = runtime/num_outs
 
     #initial_mg = build_model_grid(path, '/Topography_t=0.0.txt')
-    initial_mg = build_model_grid(HOME+'/postglacial/initial_topo/', 
+    initial_mg = build_model_grid(HOME+'/postglacial/initial_topo/',
                                   'glacial_lake_plain.txt')
     min_elev = np.nanmin(initial_mg.at_node['topographic__elevation'][initial_mg.core_nodes])
 
@@ -360,7 +360,8 @@ def analyze_mean_erosion(path, plotting=True):
     for i in range(num_outs):
         t[i] = (i+1)*dt
         mg = build_model_grid(path, '/Topography_t='+str(t[i])+'.txt')
-        erosion = initial_mg.at_node['topographic__elevation'][mg.core_nodes]+uplift_rate*t[i]-mg.at_node['topographic__elevation'][mg.core_nodes]
+        erosion = initial_mg.at_node['topographic__elevation'][mg.core_nodes] \
+                  +uplift_rate*t[i]-mg.at_node['topographic__elevation'][mg.core_nodes]
         mean_erosion[i] = np.mean(erosion)
         print 'Finished loop', i+1
 
@@ -399,7 +400,8 @@ def elev_diff_btwn_moraine_upland(path, plotting=True):
     for i in range(num_outs):
         t[i] = (i+1)*dt
         mg = build_model_grid(path, '/Topography_t='+str(t[i])+'.txt')
-        diff[i] = np.mean(mg.at_node['topographic__elevation'][moraine])-np.mean(mg.at_node['topographic__elevation'][upland])
+        diff[i] = np.mean(mg.at_node['topographic__elevation'][moraine]) \
+                  -np.mean(mg.at_node['topographic__elevation'][upland])
         print 'Finished loop', i+1
 
     save_result(t, diff, path+'/elev_diff_btwn_moraine_upland.txt')
@@ -902,9 +904,10 @@ def generate_savepath(folder_name, input_file=None):
         name_tag = 'Not_all_dry_no_sink'
     else:
         name_tag = 'Not_all_dry_sink'
-    savepath = folder_name+name_tag+'_dt=' + str(dt) + '_total_time=' + str(runtime) + '_k_sp=' + str(k_sp) + \
-            '_uplift_rate=' + str(uplift_rate) + '_incision_rate=' + str(incision_rate) + '_initial_slope=' + str(initial_slope) + \
-            '_threshold=' + str(threshold_stream_power)
+    savepath = folder_name+name_tag+'_dt=' + str(dt) + '_total_time=' + str(runtime) \
+               + '_k_sp=' + str(k_sp) + '_uplift_rate=' + str(uplift_rate) \
+               + '_incision_rate=' + str(incision_rate) + '_initial_slope=' + str(initial_slope) \
+               + '_threshold=' + str(threshold_stream_power)
 
     return savepath
 
@@ -1004,7 +1007,8 @@ def plot_channel_profile(path, number_of_channels=1):
         mg = pf.pit_fill()
         mg = fr.route_flow(routing_flat=all_dry)
         plt.figure(1)
-        profile_IDs, dists_upstr = analyze_channel_network_and_plot(mg, number_of_channels=number_of_channels)
+        profile_IDs, dists_upstr = analyze_channel_network_and_plot(
+            mg, number_of_channels=number_of_channels)
         plt.xlabel('Distance upstream (m)')
         plt.ylabel('Elevation (m)')
         plt.xlim(0, 7000)
@@ -1090,7 +1094,8 @@ def plot_channel(path, number_of_channels=1):
         mg = pf.pit_fill()
         mg = fr.route_flow(routing_flat=all_dry)
         plt.figure(1)
-        profile_IDs, dists_upstr = analyze_channel_network_and_plot(mg, number_of_channels=number_of_channels)
+        profile_IDs, dists_upstr = analyze_channel_network_and_plot(
+            mg, number_of_channels=number_of_channels)
         plt.close('all')
         plt.figure(1)
         mg.at_node['channel_position'] = np.zeros(mg.number_of_nodes)
@@ -1131,7 +1136,8 @@ def plot_channel_unroute(path, number_of_channels=1):
         mg = pf.pit_fill()
         mg = fr.route_flow(routing_flat=False)
         plt.figure(1)
-        profile_IDs, dists_upstr = analyze_channel_network_and_plot(mg, number_of_channels=number_of_channels)
+        profile_IDs, dists_upstr = analyze_channel_network_and_plot(
+            mg, number_of_channels=number_of_channels)
         plt.close('all')
         plt.figure(1)
         mg.at_node['channel_position_unroute'] = np.zeros(mg.number_of_nodes)
