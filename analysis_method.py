@@ -1315,6 +1315,29 @@ def analyze_total_erosion_rate(path):
     plt.close('all')
 
 
+def analyze_mass_removal(path):
+    print path
+
+    input_file = path+'/coupled_params_sp.txt'
+    inputs = ModelParameterDictionary(input_file)
+    num_outs = inputs.read_int('number_of_outputs')
+    runtime = inputs.read_float('total_time')
+    dt = runtime/float(num_outs)
+    
+    initial_mg = build_model_grid(path, '/Topography_t=0.0.txt')
+    t = np.zeros(num_outs)
+    mass_removal = np.zeros(num_outs)
+    for i in range(num_outs):
+        t[i] = (i+1)*dt
+        mg = build_model_grid(path, '/Topography_t='+str((i+1)*dt)+'.txt')
+        elev_diff = initial_mg.at_node['topographic__elevation']-mg.at_node['topographic__elevation']
+        elev_diff = elev_diff[mg.core_nodes]
+        mass_removal[i] = np.sum(elev_diff)*100
+        mg = 1
+    
+    save_result(t, mass_removal, path+'mass_removal.txt')
+
+
 def analyze_diffusive_change(path):
     from landlab.components.diffusion.diffusion import LinearDiffuser
 
