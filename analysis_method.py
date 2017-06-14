@@ -46,86 +46,6 @@ def shiftColorMap(cmap, name, midpoint=0.9):
 
     return newcmap
 
-'''
-def channel_profile():
-
-    from landlab.plot import channel_profile as prf
-    from landlab.components.flow_routing.route_flow_dn_JL import FlowRouter
-
-    plt.figure(1)
-    #pdb.set_trace()
-    (mg, z) = read_esri_ascii('profile1.txt', name = 'topographic__elevation')
-    mg.set_closed_boundaries_at_grid_edges(True, False, True, True)
-    fr = FlowRouter(mg)
-    mg = fr.route_flow(routing_flat=True)
-    temp = mg.diagonal_links_at_node()
-
-    profile_IDs = prf.channel_nodes(mg, mg.at_node['topographic__steepest_slope'],
-            mg.at_node['drainage_area'], mg.at_node['flow_receiver'])
-    dists_upstr = prf.get_distances_upstream(mg, len(mg.at_node['topographic__steepest_slope']),
-            profile_IDs, mg.at_node['links_to_flow_receiver'])
-    prf.plot_profiles(dists_upstr, profile_IDs, mg.at_node['topographic__elevation'])
-
-
-    (mg, z) = read_esri_ascii('profile2.txt', name = 'topographic__elevation')
-    mg.set_closed_boundaries_at_grid_edges(True, False, True, True)
-    fr = FlowRouter(mg)
-    mg = fr.route_flow(routing_flat=True)
-    temp = mg.diagonal_links_at_node()
-
-    profile_IDs = prf.channel_nodes(mg, mg.at_node['topographic__steepest_slope'],
-            mg.at_node['drainage_area'], mg.at_node['flow_receiver'])
-    dists_upstr = prf.get_distances_upstream(mg, len(mg.at_node['topographic__steepest_slope']),
-            profile_IDs, mg.at_node['links_to_flow_receiver'])
-    prf.plot_profiles(dists_upstr, profile_IDs, mg.at_node['topographic__elevation'])
-
-    plt.savefig('channel_profile.jpg')
-
-    plt.close('all')
-'''
-
-
-def plot_grid_3d(file_name, zticks=None):
-
-    from mpl_toolkits.mplot3d import Axes3D
-
-    (mg, z) = read_esri_ascii(file_name+'.txt', name = 'topographic__elevation')
-
-    z = mg.at_node['topographic__elevation'][mg.core_nodes]
-    z = z.reshape(mg.cell_grid_shape)
-    y = np.arange(mg.cell_grid_shape[0])*mg.dx
-    x = np.arange(mg.cell_grid_shape[1])*mg.dy
-    x, y = np.meshgrid(x, y)
-
-    fig = plt.figure(1)
-    ax = Axes3D(fig)
-    ax.view_init(azim=-120)
-    #ax.invert_xaxis()
-
-    '''
-    x_scale=1
-    y_scale=1
-    z_scale=0.2
-
-    scale=np.diag([x_scale, y_scale, z_scale, 1.0])
-    scale=scale*(1.0/scale.max())
-    scale[3,3]=1.0
-
-    def short_proj():
-        return np.dot(Axes3D.get_proj(ax), scale)
-
-    ax.get_proj=short_proj
-    '''
-    surf = ax.plot_surface(x, y, z, rstride=1, cstride=1, cmap='jet', linewidth=0)
-
-    #ax.set_zticks([-50, 20])
-    if not(zticks is None):
-        ax.set_zticks(zticks)
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    plt.savefig(file_name+'_3d.jpg', dpi=300)
-    plt.close('all')
-
 
 def rewrite_params_file(file_name, kwd, value):
 
@@ -154,16 +74,6 @@ def rewrite_params_file(file_name, kwd, value):
     for line in line_list:
         param_file.write(line+'\n')
     param_file.close()
-
-
-def iteratively_run(kwd, value_list, input_file=None):
-
-    from stream_power_model import run_model
-    if input_file is None:
-        input_file = './coupled_params_sp.txt'
-    for value in value_list:
-        rewrite_params_file(input_file, kwd, value)
-        run_model(input_file=input_file)
 
 
 def save_result(t, result, filepath):
