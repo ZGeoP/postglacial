@@ -1480,6 +1480,10 @@ def identify_channels(grid, base_nodes, elev_thr):
             max_drainage[receiver[node]] = drainage_area[node]
 
     flow_to_boundary = identify_drained_area_elev_thr(grid, elev_thr)
+    # If all the nodes connected to bondaries (through routing_flat) are needed,
+    # comment the above line, and use the following two lines.
+    #flow_to_boundary = np.zeros(n, dtype=bool)
+    #flow_to_boundary[:] = True
     channel_list = []
     for outlet_node in base_nodes:
         channel = []
